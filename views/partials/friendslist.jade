@@ -1,0 +1,81 @@
+h2 Friends
+div(class="list-group")
+  //- Filter Input
+  div.list-group-item
+    input(type="search" id="friend-filter" class="form-control input-sm" placeholder="filter friends")
+
+  div#friends-list
+    each friend in pageData.friends.accepted
+      a.list-group-item
+        span.ion-record.active
+          img( src=friend.friend.gravatar(48), class="img-circle" )
+          ul( class="list-unstyled" style="display: inline; position: absolute; padding: 0;" )
+            li.name #{friend.friend.profile.name}
+            li.status.text-muted status text here
+        span.ion-arrow-down-b.pull-right
+
+    if pageData.friends.other.length
+      each friend in pageData.friends.other
+        a.list-group-item
+          span.ion-record.active
+            img( src=friend.friend.gravatar(48), class="img-circle" )
+          if friend.status === 'pending'
+            ul( class="list-unstyled" style="display: inline; position: absolute; padding: 0;" )
+              li.name #{friend.friend.profile.name}
+              li.actions
+                button(class="btn-link btn-lg" title="Accept friend requst")
+                  span.ion-checkmark-circled
+                button(class="btn-link btn-lg" title="Deny friend request")
+                  span.ion-minus-circled
+            span( class="ion-arrow-return-right pull-right"
+                  title="friend request from #{friend.friend.profile.name} sent #{moment(friend.added).fromNow()}" )
+          else if friend.status === 'requested'
+            ul( class="list-unstyled" style="display: inline; position: absolute; padding: 0;" )
+              li.name #{friend.friend.profile.name}
+              li.status.text-muted #{friend.status}
+            span( class="ion-paper-airplane pull-right"
+                  title="Your friend request was sent to #{friend.friend.profile.name} #{moment(friend.added).fromNow()} and is pending approval.")
+
+
+
+  //-
+    Accepted Friends:
+    div(id="friends-list")
+      each accFriend in pageData.friends.accepted
+        div.list-group-item
+          div.media
+            div.media-body
+              a(href="#" class="media-left")
+                img(src=accFriend.friend.gravatar(32), class="img-circle")
+              |&nbsp; &nbsp;
+              h6(class="media-heading fl-name" style="display:inline;") #{accFriend.friend.profile.name || accFriend.friend.email}
+                span.pull-right.ion-close-round.btn-link
+              span.center-block.pull-right
+                em.small.text-muted Added #{moment(accFriend.added).fromNow()}
+
+      //- pending/requested Friends:
+      if pageData.friends.other.length
+        each otherFriend in pageData.friends.other
+          div.list-group-item
+            div.media
+              div.media-body
+                a(href="#" class="media-left")
+                  img(src=otherFriend.friend.gravatar(32), class="img-circle")
+                |&nbsp; &nbsp;
+                h6(class="media-heading fl-name" style="display:inline;") #{otherFriend.friend.profile.name || otherFriend.friend.email}
+                  em.small &nbsp; Pending
+                  span.pull-right.ion-close-round.btn-link
+                  span
+                    button.btn.btn-success.btn-sm Accept
+                    button.btn.btn-warning.btn-sm Reject
+
+  //- Friend Request Field
+  div.list-group-item
+    form(id='addfriend-form', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      div.input-group.input-group-sm
+        input(type="email", class="form-control", placeholder="add via email")
+        span.input-group-btn
+          button(class="btn btn-default", type="submit")
+            span(class="ion-person-add", aria-hidden="true")
+      p.help-block.text-center

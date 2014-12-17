@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 Welcome back, #{user.profile.name}
+  p.lead Check out what's happened while you were away:
+  hr
+  .row
+    .col-sm-9
+      h2 Updates
+      p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+      p
+        a.btn.btn-default(href='#', role='button') View details »
+    .col-sm-3
+      include partials/friendslist.jade
